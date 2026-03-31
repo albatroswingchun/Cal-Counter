@@ -88,10 +88,11 @@
     }
 
     .gauge-wrap {
+      position: relative;
       display: flex;
       justify-content: center;
-      margin-top: 4px;
-      margin-bottom: 2px;
+      margin-top: 2px;
+      margin-bottom: 6px;
       animation: softRise 0.35s ease;
     }
 
@@ -102,18 +103,26 @@
       display: block;
     }
 
-    .center-readout {
+    .gauge-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .gauge-readout {
+      margin-top: 112px;
       text-align: center;
-      margin-top: -2px;
-      margin-bottom: 10px;
       animation: fadeIn 0.35s ease;
     }
 
     .current {
-      font-size: 40px;
+      font-size: 42px;
       font-weight: 800;
       line-height: 1;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.6px;
     }
 
     .target {
@@ -127,7 +136,7 @@
       text-align: center;
       font-size: 15px;
       font-weight: 700;
-      margin-top: 10px;
+      margin-top: 8px;
       margin-bottom: 12px;
       min-height: 20px;
       transition: color 0.25s ease, opacity 0.25s ease;
@@ -322,7 +331,11 @@
       }
 
       .current {
-        font-size: 36px;
+        font-size: 38px;
+      }
+
+      .gauge-readout {
+        margin-top: 104px;
       }
 
       .picker {
@@ -345,14 +358,14 @@
 
       <div class="section-title">Objectif du jour</div>
 
-      <div class="picker-wrap">
-        <div class="picker-block" style="width:100%; max-width:260px;">
-          <div class="picker" id="goalPicker">
-            <div class="picker-center-line"></div>
-            <div class="picker-wheel" id="goalWheel"></div>
-          </div>
-          <div class="picker-label">kcal</div>
+      <div class="gauge-wrap" style="display:none;"></div>
+
+      <div class="picker-block" style="width:100%; max-width:260px; margin:0 auto 12px;">
+        <div class="picker" id="goalPicker">
+          <div class="picker-center-line"></div>
+          <div class="picker-wheel" id="goalWheel"></div>
         </div>
+        <div class="picker-label">kcal</div>
       </div>
 
       <button class="primary" id="validateGoalBtn">Valider l’objectif</button>
@@ -380,12 +393,14 @@
             stroke-dasharray="0 9999"
           ></path>
         </svg>
-      </div>
 
-      <div class="center-readout">
-        <div class="current"><span id="consumedValue">0</span> kcal</div>
-        <div class="target">
-          Objectif : <span id="targetValue">1700</span> kcal
+        <div class="gauge-overlay">
+          <div class="gauge-readout">
+            <div class="current"><span id="consumedValue">0</span> kcal</div>
+            <div class="target">
+              Objectif : <span id="targetValue">1700</span> kcal
+            </div>
+          </div>
         </div>
       </div>
 
@@ -417,7 +432,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "calorie-counter-v5";
+    const STORAGE_KEY = "calorie-counter-v6";
 
     const state = {
       goal: 1700,
