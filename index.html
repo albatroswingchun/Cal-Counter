@@ -119,14 +119,25 @@
     }
 
     .current {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       font-size: 42px;
       font-weight: 800;
       line-height: 1;
       letter-spacing: -0.6px;
     }
 
+    .current-unit {
+      margin-top: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+      color: var(--muted);
+    }
+
     .target {
-      margin-top: 6px;
+      margin-top: 8px;
       font-size: 15px;
       color: var(--muted);
       line-height: 1.35;
@@ -358,8 +369,6 @@
 
       <div class="section-title">Objectif du jour</div>
 
-      <div class="gauge-wrap" style="display:none;"></div>
-
       <div class="picker-block" style="width:100%; max-width:260px; margin:0 auto 12px;">
         <div class="picker" id="goalPicker">
           <div class="picker-center-line"></div>
@@ -396,7 +405,10 @@
 
         <div class="gauge-overlay">
           <div class="gauge-readout">
-            <div class="current"><span id="consumedValue">0</span> kcal</div>
+            <div class="current">
+              <span id="consumedValue">0</span>
+              <span class="current-unit">kcal</span>
+            </div>
             <div class="target">
               Objectif : <span id="targetValue">1700</span> kcal
             </div>
@@ -432,7 +444,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "calorie-counter-v6";
+    const STORAGE_KEY = "calorie-counter-v7";
 
     const state = {
       goal: 1700,
