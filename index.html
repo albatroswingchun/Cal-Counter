@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compteur de calories</title>
+  <style>
+    :root {
+      --bg: #000000;
+      --panel: #111111;
+      --panel-2: #1a1a1a;
+      --text: #f5f5f5;
+      --muted: #9ca3af;
+      --track: #3a3a3a;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #22c55e;
+      --blue: #3b82f6;
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      min-height: 100%;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px 14px 40px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 560px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, var(--panel), #0a0a0a);
+      border: 1px solid #1f1f1f;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 18px;
+      font-size: 28px;
+      line-height: 1.1;
+      text-align: center;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      text-align: center;
+    }
+
+    .sub {
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.4;
+      margin-bottom: 18px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .wheel-row {
+      display: grid;
+      grid-template-columns: 56px 1fr 56px;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .big-value {
+      text-align: center;
+      font-size: 34px;
+      font-weight: 700;
+      padding: 14px 8px;
+      background: var(--panel-2);
+      border-radius: 16px;
+      border: 1px solid #282828;
+      user-select: none;
+    }
+
+    .unit {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 400;
+      margin-top: 4px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 16px;
+      background: var(--panel-2);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 700;
+      min-height: 52px;
+      transition: transform 0.08s ease, opacity 0.2s ease, background 0.2s ease;
+      border: 1px solid #292929;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .step-btn {
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .primary {
+      background: var(--blue);
+      border-color: transparent;
+      color: white;
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 16px;
+      margin-top: 8px;
+    }
+
+    .secondary {
+      width: 100%;
+      padding: 14px 16px;
+      margin-top: 10px;
+    }
+
+    .danger {
+      background: #2a1111;
+      border-color: #4d1b1b;
+      color: #ffb4b4;
+      width: 100%;
+      padding: 14px 16px;
+      margin-top: 10px;
+    }
+
+    .top-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .stat {
+      background: var(--panel-2);
+      border: 1px solid #272727;
+      border-radius: 16px;
+      padding: 12px 10px;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .gauge-wrap {
+      margin: 12px 0 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    svg {
+      width: 100%;
+      max-width: 420px;
+      height: auto;
+      display: block;
+    }
+
+    .center-readout {
+      text-align: center;
+      margin-top: -12px;
+    }
+
+    .current {
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .target {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .status {
+      text-align: center;
+      font-size: 15px;
+      margin-top: 14px;
+      font-weight: 700;
+    }
+
+    .status.green { color: var(--success); }
+    .status.orange { color: var(--warning); }
+    .status.red { color: var(--danger); }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .quick-btn {
+      padding: 14px 10px;
+      font-size: 15px;
+    }
+
+    .quick-btn.active {
+      outline: 2px solid var(--blue);
+      background: #14213d;
+    }
+
+    .footer-note {
+      margin-top: 10px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .small-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 420px) {
+      h1 {
+        font-size: 24px;
+      }
+
+      .big-value {
+        font-size: 28px;
+      }
+
+      .current {
+        font-size: 28px;
+      }
+
+      .top-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .small-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div id="setupCard" class="card">
+      <h1>Compteur de calories</h1>
+      <div class="sub">
+        Choisis ton objectif journalier de calories.<br />
+        Réglage par pas de 10, jusqu’à 5000 kcal.
+      </div>
+
+      <h2>Objectif du jour</h2>
+      <div class="wheel-row">
+        <button class="step-btn" id="goalMinus">−</button>
+        <div class="big-value">
+          <span id="goalValue">1700</span>
+          <span class="unit">kcal</span>
+        </div>
+        <button class="step-btn" id="goalPlus">+</button>
+      </div>
+
+      <button class="primary" id="validateGoalBtn">Valider</button>
+    </div>
+
+    <div id="trackerCard" class="card hidden">
+      <h1>Compteur de calories</h1>
+
+      <div class="gauge-wrap">
+        <svg viewBox="0 0 420 250" aria-label="Jauge calories">
+          <defs>
+            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#22c55e"></stop>
+              <stop offset="65%" stop-color="#f59e0b"></stop>
+              <stop offset="100%" stop-color="#ef4444"></stop>
+            </linearGradient>
+          </defs>
+
+          <!-- Fond de jauge -->
+          <path
+            id="trackArc"
+            d=""
+            fill="none"
+            stroke="#3a3a3a"
+            stroke-width="28"
+            stroke-linecap="round"
+          ></path>
+
+          <!-- Progression -->
+          <path
+            id="progressArc"
+            d=""
+            fill="none"
+            stroke="url(#progressGradient)"
+            stroke-width="28"
+            stroke-linecap="round"
+            stroke-dasharray="0 9999"
+          ></path>
+        </svg>
+      </div>
+
+      <div class="center-readout">
+        <div class="current"><span id="consumedValue">0</span> kcal</div>
+        <div class="target">Objectif : <span id="targetValue">1700</span> kcal</div>
+      </div>
+
+      <div id="statusText" class="status green">Tu es à 0 % de ton objectif.</div>
+
+      <div class="top-stats">
+        <div class="stat">
+          <div class="stat-label">Restant</div>
+          <div class="stat-value"><span id="remainingValue">1700</span></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Ajout actuel</div>
+          <div class="stat-value"><span id="addValueInline">350</span></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Progression</div>
+          <div class="stat-value"><span id="progressPercent">0</span>%</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="controlsCard" class="card hidden">
+      <div class="section-title">Ajouter des calories</div>
+
+      <div class="quick-actions">
+        <button class="quick-btn" data-quick="150">+150</button>
+        <button class="quick-btn active" data-quick="350">+350</button>
+        <button class="quick-btn" data-quick="500">+500</button>
+      </div>
+
+      <div class="wheel-row">
+        <button class="step-btn" id="addMinus">−</button>
+        <div class="big-value">
+          <span id="addValue">350</span>
+          <span class="unit">kcal à ajouter</span>
+        </div>
+        <button class="step-btn" id="addPlus">+</button>
+      </div>
+
+      <button class="primary" id="addCaloriesBtn">Ajouter</button>
+
+      <div class="small-row">
+        <button class="secondary" id="changeGoalBtn">Modifier l’objectif</button>
+        <button class="danger" id="resetDayBtn">Remise à zéro</button>
+      </div>
+
+      <div class="footer-note">
+        Les valeurs sont enregistrées automatiquement sur l’appareil.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "calorie-counter-app-v1";
+
+    const state = {
+      goal: 1700,
+      consumed: 0,
+      addAmount: 350,
+      maxGoal: 5000,
+      minGoal: 10,
+      step: 10
+    };
+
+    const els = {
+      setupCard: document.getElementById("setupCard"),
+      trackerCard: document.getElementById("trackerCard"),
+      controlsCard: document.getElementById("controlsCard"),
+
+      goalValue: document.getElementById("goalValue"),
+      goalMinus: document.getElementById("goalMinus"),
+      goalPlus: document.getElementById("goalPlus"),
+      validateGoalBtn: document.getElementById("validateGoalBtn"),
+
+      consumedValue: document.getElementById("consumedValue"),
+      targetValue: document.getElementById("targetValue"),
+      remainingValue: document.getElementById("remainingValue"),
+      progressPercent: document.getElementById("progressPercent"),
+      statusText: document.getElementById("statusText"),
+
+      addValue: document.getElementById("addValue"),
+      addValueInline: document.getElementById("addValueInline"),
+      addMinus: document.getElementById("addMinus"),
+      addPlus: document.getElementById("addPlus"),
+      addCaloriesBtn: document.getElementById("addCaloriesBtn"),
+
+      changeGoalBtn: document.getElementById("changeGoalBtn"),
+      resetDayBtn: document.getElementById("resetDayBtn"),
+
+      trackArc: document.getElementById("trackArc"),
+      progressArc: document.getElementById("progressArc")
+    };
+
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
+    }
+
+    function roundToStep(value, step) {
+      return Math.round(value / step) * step;
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        goal: state.goal,
+        consumed: state.consumed,
+        addAmount: state.addAmount
+      }));
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+
+      try {
+        const parsed = JSON.parse(raw);
+
+        if (typeof parsed.goal === "number") {
+          state.goal = clamp(roundToStep(parsed.goal, state.step), state.minGoal, state.maxGoal);
+        }
+
+        if (typeof parsed.consumed === "number") {
+          state.consumed = Math.max(0, roundToStep(parsed.consumed, state.step));
+        }
+
+        if (typeof parsed.addAmount === "number") {
+          state.addAmount = clamp(roundToStep(parsed.addAmount, state.step), state.step, state.maxGoal);
+        }
+      } catch (e) {
+        console.error("Erreur de chargement localStorage :", e);
+      }
+    }
+
+    function polarToCartesian(cx, cy, r, angleDeg) {
+      const angleRad = (angleDeg - 90) * Math.PI / 180;
+      return {
+        x: cx + r * Math.cos(angleRad),
+        y: cy + r * Math.sin(angleRad)
+      };
+    }
+
+    function describeArc(cx, cy, r, startAngle, endAngle) {
+      const start = polarToCartesian(cx, cy, r, endAngle);
+      const end = polarToCartesian(cx, cy, r, startAngle);
+      const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+      return [
+        "M", start.x, start.y,
+        "A", r, r, 0, largeArcFlag, 0, end.x, end.y
+      ].join(" ");
+    }
+
+    function getProgressRatio() {
+      if (state.goal <= 0) return 0;
+      return state.consumed / state.goal;
+    }
+
+    function updateGauge() {
+      const cx = 210;
+      const cy = 210;
+      const r = 140;
+
+      const fullStart = 270;
+      const fullEnd = 90;
+
+      const trackPath = describeArc(cx, cy, r, fullStart, fullEnd + 360);
+      els.trackArc.setAttribute("d", trackPath);
+      els.progressArc.setAttribute("d", trackPath);
+
+      const pathLength = els.progressArc.getTotalLength();
+      const ratio = Math.max(0, getProgressRatio());
+      const clampedRatio = Math.min(ratio, 1);
+      const progressLength = pathLength * clampedRatio;
+
+      els.progressArc.setAttribute("stroke-dasharray", `${progressLength} ${pathLength}`);
+
+      if (ratio < 0.5) {
+        els.progressArc.setAttribute("stroke", "#22c55e");
+      } else if (ratio < 0.85) {
+        els.progressArc.setAttribute("stroke", "#f59e0b");
+      } else {
+        els.progressArc.setAttribute("stroke", "#ef4444");
+      }
+    }
+
+    function updateTexts() {
+      const remaining = state.goal - state.consumed;
+      const ratio = getProgressRatio();
+      const percent = Math.round(ratio * 100);
+
+      els.goalValue.textContent = state.goal;
+      els.consumedValue.textContent = state.consumed;
+      els.targetValue.textContent = state.goal;
+      els.remainingValue.textContent = remaining >= 0 ? remaining : `+${Math.abs(remaining)}`;
+      els.progressPercent.textContent = percent;
+      els.addValue.textContent = state.addAmount;
+      els.addValueInline.textContent = state.addAmount;
+
+      els.statusText.classList.remove("green", "orange", "red");
+
+      if (ratio < 0.5) {
+        els.statusText.classList.add("green");
+        els.statusText.textContent = `Tu es à ${percent} % de ton objectif.`;
+      } else if (ratio < 1) {
+        els.statusText.classList.add("orange");
+        els.statusText.textContent = `Tu es à ${percent} % de ton objectif.`;
+      } else if (ratio === 1) {
+        els.statusText.classList.add("red");
+        els.statusText.textContent = "Objectif atteint.";
+      } else {
+        const over = state.consumed - state.goal;
+        els.statusText.classList.add("red");
+        els.statusText.textContent = `Objectif dépassé de ${over} kcal.`;
+      }
+
+      document.querySelectorAll(".quick-btn").forEach(btn => {
+        btn.classList.toggle("active", Number(btn.dataset.quick) === state.addAmount);
+      });
+    }
+
+    function render() {
+      updateTexts();
+      updateGauge();
+      saveState();
+    }
+
+    function showTracker() {
+      els.setupCard.classList.add("hidden");
+      els.trackerCard.classList.remove("hidden");
+      els.controlsCard.classList.remove("hidden");
+    }
+
+    function showSetup() {
+      els.setupCard.classList.remove("hidden");
+      els.trackerCard.classList.add("hidden");
+      els.controlsCard.classList.add("hidden");
+      render();
+    }
+
+    els.goalMinus.addEventListener("click", () => {
+      state.goal = clamp(state.goal - state.step, state.minGoal, state.maxGoal);
+      render();
+    });
+
+    els.goalPlus.addEventListener("click", () => {
+      state.goal = clamp(state.goal + state.step, state.minGoal, state.maxGoal);
+      render();
+    });
+
+    els.validateGoalBtn.addEventListener("click", () => {
+      if (state.consumed > state.goal) {
+        state.consumed = state.goal;
+      }
+      showTracker();
+      render();
+    });
+
+    els.addMinus.addEventListener("click", () => {
+      state.addAmount = clamp(state.addAmount - state.step, state.step, state.maxGoal);
+      render();
+    });
+
+    els.addPlus.addEventListener("click", () => {
+      state.addAmount = clamp(state.addAmount + state.step, state.step, state.maxGoal);
+      render();
+    });
+
+    els.addCaloriesBtn.addEventListener("click", () => {
+      state.consumed += state.addAmount;
+      state.consumed = roundToStep(state.consumed, state.step);
+      render();
+    });
+
+    els.changeGoalBtn.addEventListener("click", () => {
+      showSetup();
+    });
+
+    els.resetDayBtn.addEventListener("click", () => {
+      const confirmed = confirm("Remettre le compteur du jour à zéro ?");
+      if (!confirmed) return;
+      state.consumed = 0;
+      render();
+    });
+
+    document.querySelectorAll(".quick-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        state.addAmount = Number(btn.dataset.quick);
+        render();
+      });
+    });
+
+    loadState();
+    showTracker();
+    render();
+  </script>
+</body>
+</html>
