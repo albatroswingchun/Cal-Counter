@@ -2,13 +2,13 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Compteur de calories</title>
   <style>
     :root {
-      --bg: #000;
+      --bg: #000000;
       --panel: #0f0f0f;
-      --panel-2: #171717;
+      --panel-2: #161616;
       --border: #262626;
       --text: #f5f5f5;
       --muted: #9ca3af;
@@ -18,9 +18,9 @@
       --blue: #3b82f6;
       --shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
       --radius: 24px;
-      --picker-height: 240px;
-      --row-height: 46px;
-      --center-height: 64px;
+      --picker-height: 285px;
+      --row-height: 42px;
+      --center-height: 60px;
     }
 
     * {
@@ -36,26 +36,28 @@
       background: var(--bg);
       color: var(--text);
       font-family: Arial, Helvetica, sans-serif;
+      overflow-x: hidden;
     }
 
     body {
       display: flex;
       justify-content: center;
-      padding: 18px 14px 40px;
+      padding: 12px 12px 18px;
     }
 
     .app {
       width: 100%;
-      max-width: 560px;
+      max-width: 440px;
     }
 
     .card {
-      background: linear-gradient(180deg, var(--panel), #080808);
+      background: linear-gradient(180deg, var(--panel), #090909);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 20px;
-      margin-bottom: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      animation: fadeIn 0.35s ease;
     }
 
     .hidden {
@@ -63,66 +65,72 @@
     }
 
     h1 {
-      margin: 0 0 14px;
+      margin: 0 0 10px;
       text-align: center;
-      font-size: 28px;
+      font-size: 24px;
       line-height: 1.1;
+      letter-spacing: -0.3px;
     }
 
     .sub {
       text-align: center;
       color: var(--muted);
-      font-size: 14px;
-      line-height: 1.45;
-      margin-bottom: 18px;
+      font-size: 13px;
+      line-height: 1.4;
+      margin-bottom: 12px;
     }
 
     .section-title {
       text-align: center;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 700;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
 
     .gauge-wrap {
       display: flex;
       justify-content: center;
-      margin-top: 10px;
-      margin-bottom: 8px;
+      margin-top: 4px;
+      margin-bottom: 2px;
+      animation: softRise 0.35s ease;
     }
 
     svg {
       width: 100%;
-      max-width: 420px;
+      max-width: 320px;
       height: auto;
       display: block;
     }
 
     .center-readout {
       text-align: center;
-      margin-top: -6px;
-      margin-bottom: 18px;
+      margin-top: -2px;
+      margin-bottom: 10px;
+      animation: fadeIn 0.35s ease;
     }
 
     .current {
-      font-size: 36px;
+      font-size: 40px;
       font-weight: 800;
       line-height: 1;
+      letter-spacing: -0.5px;
     }
 
     .target {
       margin-top: 6px;
-      font-size: 14px;
+      font-size: 15px;
       color: var(--muted);
-      line-height: 1.4;
+      line-height: 1.35;
     }
 
     .status {
       text-align: center;
       font-size: 15px;
       font-weight: 700;
-      margin-top: 14px;
-      margin-bottom: 18px;
+      margin-top: 10px;
+      margin-bottom: 12px;
+      min-height: 20px;
+      transition: color 0.25s ease, opacity 0.25s ease;
     }
 
     .status.green {
@@ -133,27 +141,28 @@
       color: var(--red);
     }
 
-    .picker-wrap {
-      display: flex;
-      justify-content: center;
-      margin: 12px 0 8px;
+    .picker-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 112px;
+      gap: 10px;
+      align-items: stretch;
+      margin-top: 6px;
     }
 
     .picker-block {
-      width: 100%;
-      max-width: 260px;
-      margin: 0 auto;
+      min-width: 0;
     }
 
     .picker {
       width: 100%;
       height: var(--picker-height);
       border-radius: 22px;
-      background: var(--panel-2);
+      background: linear-gradient(180deg, #181818, #111111);
       border: 1px solid #2b2b2b;
       position: relative;
       overflow: hidden;
       touch-action: none;
+      box-shadow: inset 0 0 24px rgba(255,255,255,0.02);
     }
 
     .picker::before,
@@ -162,19 +171,19 @@
       position: absolute;
       left: 0;
       width: 100%;
-      height: 74px;
+      height: 86px;
       z-index: 5;
       pointer-events: none;
     }
 
     .picker::before {
       top: 0;
-      background: linear-gradient(180deg, rgba(23,23,23,1) 0%, rgba(23,23,23,0.92) 35%, rgba(23,23,23,0) 100%);
+      background: linear-gradient(180deg, rgba(17,17,17,1) 0%, rgba(17,17,17,0.94) 38%, rgba(17,17,17,0) 100%);
     }
 
     .picker::after {
       bottom: 0;
-      background: linear-gradient(0deg, rgba(23,23,23,1) 0%, rgba(23,23,23,0.92) 35%, rgba(23,23,23,0) 100%);
+      background: linear-gradient(0deg, rgba(17,17,17,1) 0%, rgba(17,17,17,0.94) 38%, rgba(17,17,17,0) 100%);
     }
 
     .picker-center-line {
@@ -189,8 +198,10 @@
       border-radius: 14px;
       z-index: 4;
       pointer-events: none;
-      background: rgba(255,255,255,0.03);
-      box-shadow: inset 0 0 20px rgba(255,255,255,0.025);
+      background: rgba(255,255,255,0.035);
+      box-shadow:
+        inset 0 0 20px rgba(255,255,255,0.02),
+        0 0 16px rgba(255,255,255,0.02);
     }
 
     .picker-wheel {
@@ -214,19 +225,12 @@
 
     .picker-value-text {
       display: inline-block;
-      min-width: 120px;
+      min-width: 84px;
       text-align: center;
       font-weight: 700;
       transform-origin: center center;
       white-space: nowrap;
-    }
-
-    .picker-help {
-      text-align: center;
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 10px;
-      margin-bottom: 10px;
+      transition: color 0.12s ease, transform 0.12s ease, opacity 0.12s ease;
     }
 
     .picker-label {
@@ -234,19 +238,24 @@
       color: var(--muted);
       font-size: 13px;
       margin-top: 8px;
-      margin-bottom: 2px;
       letter-spacing: 0.2px;
+    }
+
+    .side-action {
+      display: flex;
+      align-items: center;
+      justify-content: stretch;
     }
 
     button {
       width: 100%;
-      min-height: 54px;
+      min-height: 56px;
       border: 0;
       border-radius: 16px;
       font-size: 16px;
       font-weight: 700;
       cursor: pointer;
-      transition: transform 0.08s ease, opacity 0.2s ease, background 0.2s ease;
+      transition: transform 0.12s ease, opacity 0.2s ease, background 0.25s ease, box-shadow 0.25s ease;
     }
 
     button:active {
@@ -254,8 +263,13 @@
     }
 
     .primary {
-      background: var(--blue);
+      background: linear-gradient(180deg, #4d8dff, var(--blue));
       color: white;
+      box-shadow: 0 8px 20px rgba(59,130,246,0.25);
+    }
+
+    .primary:hover {
+      box-shadow: 0 10px 24px rgba(59,130,246,0.32);
     }
 
     .secondary {
@@ -282,20 +296,37 @@
       text-align: center;
       font-size: 12px;
       color: var(--muted);
-      line-height: 1.4;
+      line-height: 1.35;
     }
 
-    @media (max-width: 440px) {
-      h1 {
-        font-size: 24px;
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes softRise {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 380px) {
+      .picker-row {
+        grid-template-columns: minmax(0, 1fr) 96px;
+        gap: 8px;
       }
 
       .current {
-        font-size: 30px;
+        font-size: 36px;
       }
 
-      .picker-block {
-        max-width: 100%;
+      .picker {
+        height: 270px;
       }
 
       .actions-grid {
@@ -309,14 +340,13 @@
     <div id="setupCard" class="card">
       <h1>Compteur de calories</h1>
       <div class="sub">
-        Choisis d’abord ton objectif journalier.<br>
-        Fais défiler la valeur de 5 en 5.
+        Choisis d’abord ton objectif journalier.
       </div>
 
       <div class="section-title">Objectif du jour</div>
 
       <div class="picker-wrap">
-        <div class="picker-block">
+        <div class="picker-block" style="width:100%; max-width:260px;">
           <div class="picker" id="goalPicker">
             <div class="picker-center-line"></div>
             <div class="picker-wheel" id="goalWheel"></div>
@@ -324,8 +354,6 @@
           <div class="picker-label">kcal</div>
         </div>
       </div>
-
-      <div class="picker-help">Glisse vers le haut ou le bas</div>
 
       <button class="primary" id="validateGoalBtn">Valider l’objectif</button>
     </div>
@@ -363,9 +391,7 @@
 
       <div id="statusText" class="status green">Tu es à 0 % de ton objectif.</div>
 
-      <div class="section-title">Ajouter des calories</div>
-
-      <div class="picker-wrap">
+      <div class="picker-row">
         <div class="picker-block">
           <div class="picker" id="addPicker">
             <div class="picker-center-line"></div>
@@ -373,11 +399,11 @@
           </div>
           <div class="picker-label">kcal à ajouter</div>
         </div>
+
+        <div class="side-action">
+          <button class="primary" id="addCaloriesBtn">Ajouter</button>
+        </div>
       </div>
-
-      <div class="picker-help">Glisse vers le haut ou le bas</div>
-
-      <button class="primary" id="addCaloriesBtn">Ajouter</button>
 
       <div class="actions-grid">
         <button class="secondary" id="changeGoalBtn">Modifier l’objectif</button>
@@ -391,7 +417,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "calorie-counter-v4";
+    const STORAGE_KEY = "calorie-counter-v5";
 
     const state = {
       goal: 1700,
@@ -537,9 +563,9 @@
         maxValue
       } = options;
 
-      const rowHeight = 46;
-      const centerY = 120;
-      const visibleRange = 5;
+      const rowHeight = 42;
+      const centerY = 142;
+      const visibleRange = 6;
 
       let dragY = 0;
       let lastPointerY = 0;
@@ -569,26 +595,30 @@
 
           const y = centerY + (i * rowHeight) + dragY;
           const distancePx = y - centerY;
-          const normalized = Math.min(Math.abs(distancePx) / (rowHeight * 3.2), 1);
+          const normalized = Math.min(Math.abs(distancePx) / (rowHeight * 3.5), 1);
           const value = clamp(getValue() + i * state.step, state.minValue, maxValue);
 
-          const scale = 1.45 - (normalized * 0.62);
-          const opacity = 1 - (normalized * 0.82);
-          const blur = normalized * 1.2;
-          const fontSize = 18 + (1 - normalized) * 28;
-          const fontWeight = normalized < 0.22 ? 800 : 700;
+          const scale = 1.62 - (normalized * 0.82);
+          const opacity = 1 - (normalized * 0.86);
+          const blur = normalized * 0.85;
+          const fontSize = 15 + (1 - normalized) * 18;
+          const fontWeight = normalized < 0.18 ? 800 : 700;
 
           item.style.top = `${y - rowHeight / 2}px`;
           item.style.opacity = opacity.toFixed(3);
           item.style.filter = `blur(${blur.toFixed(2)}px)`;
+          item.style.transition = dragging
+            ? "none"
+            : "top 0.16s ease, opacity 0.18s ease, filter 0.18s ease";
 
           const text = document.createElement("div");
           text.className = "picker-value-text";
           text.textContent = value;
-          text.style.transform = `scale(${Math.max(scale, 0.72).toFixed(3)})`;
+          text.style.transform = `scale(${Math.max(scale, 0.7).toFixed(3)})`;
           text.style.fontSize = `${fontSize.toFixed(1)}px`;
           text.style.fontWeight = String(fontWeight);
-          text.style.color = normalized < 0.18 ? "#ffffff" : "#a1a1aa";
+          text.style.color = normalized < 0.16 ? "#ffffff" : "#9ca3af";
+          text.style.opacity = normalized < 0.16 ? "1" : String(Math.max(0.35, 1 - normalized * 0.55));
 
           item.appendChild(text);
           wheelElement.appendChild(item);
@@ -598,15 +628,15 @@
       function animate() {
         if (!dragging) {
           dragY += velocity;
-          velocity *= 0.92;
+          velocity *= 0.94;
 
           applyStepsFromDrag();
 
-          if (Math.abs(velocity) < 0.02) {
+          if (Math.abs(velocity) < 0.015) {
             velocity = 0;
-            dragY *= 0.78;
+            dragY *= 0.82;
 
-            if (Math.abs(dragY) < 0.2) {
+            if (Math.abs(dragY) < 0.12) {
               dragY = 0;
             }
           }
@@ -614,7 +644,7 @@
 
         renderWheel();
 
-        if (dragging || Math.abs(velocity) > 0.02 || Math.abs(dragY) > 0.2) {
+        if (dragging || Math.abs(velocity) > 0.015 || Math.abs(dragY) > 0.12) {
           raf = requestAnimationFrame(animate);
         } else {
           raf = null;
@@ -646,7 +676,7 @@
         lastMoveTime = now;
 
         dragY += dy;
-        velocity = dy / dt * 12;
+        velocity = (dy / dt) * 10.5;
 
         applyStepsFromDrag();
         renderWheel();
