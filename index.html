@@ -168,8 +168,9 @@
     }
 
     .picker-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 112px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       gap: 10px;
       align-items: stretch;
       margin-top: 6px;
@@ -177,6 +178,8 @@
 
     .picker-block {
       min-width: 0;
+      width: 100%;
+      max-width: 260px;
     }
 
     .picker {
@@ -268,9 +271,14 @@
     }
 
     .side-action {
+      width: 100%;
       display: flex;
-      align-items: center;
-      justify-content: stretch;
+      justify-content: center;
+    }
+
+    #addCaloriesBtn {
+      width: 100%;
+      max-width: 260px;
     }
 
     button {
@@ -343,7 +351,6 @@
 
     @media (max-width: 380px) {
       .picker-row {
-        grid-template-columns: minmax(0, 1fr) 96px;
         gap: 8px;
       }
 
