@@ -18,6 +18,9 @@
       --blue: #3b82f6;
       --shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
       --radius: 24px;
+      --picker-height: 220px;
+      --row-height: 44px;
+      --center-height: 58px;
     }
 
     * {
@@ -81,6 +84,55 @@
       margin-bottom: 14px;
     }
 
+    .gauge-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+      margin-bottom: 8px;
+    }
+
+    svg {
+      width: 100%;
+      max-width: 420px;
+      height: auto;
+      display: block;
+    }
+
+    .center-readout {
+      text-align: center;
+      margin-top: -6px;
+      margin-bottom: 18px;
+    }
+
+    .current {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .target {
+      margin-top: 6px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .status {
+      text-align: center;
+      font-size: 15px;
+      font-weight: 700;
+      margin-top: 14px;
+      margin-bottom: 16px;
+    }
+
+    .status.green {
+      color: var(--green);
+    }
+
+    .status.red {
+      color: var(--red);
+    }
+
     .picker-wrap {
       display: flex;
       justify-content: center;
@@ -88,8 +140,9 @@
     }
 
     .picker {
-      width: 210px;
-      height: 170px;
+      width: 100%;
+      max-width: 260px;
+      height: var(--picker-height);
       border-radius: 22px;
       background: var(--panel-2);
       border: 1px solid #2b2b2b;
@@ -104,19 +157,19 @@
       position: absolute;
       left: 0;
       width: 100%;
-      height: 46px;
-      z-index: 2;
+      height: 64px;
+      z-index: 5;
       pointer-events: none;
     }
 
     .picker::before {
       top: 0;
-      background: linear-gradient(180deg, rgba(23,23,23,1) 20%, rgba(23,23,23,0) 100%);
+      background: linear-gradient(180deg, rgba(23,23,23,1) 10%, rgba(23,23,23,0.82) 45%, rgba(23,23,23,0) 100%);
     }
 
     .picker::after {
       bottom: 0;
-      background: linear-gradient(0deg, rgba(23,23,23,1) 20%, rgba(23,23,23,0) 100%);
+      background: linear-gradient(0deg, rgba(23,23,23,1) 10%, rgba(23,23,23,0.82) 45%, rgba(23,23,23,0) 100%);
     }
 
     .picker-center-line {
@@ -124,53 +177,52 @@
       left: 12px;
       right: 12px;
       top: 50%;
-      height: 54px;
+      height: var(--center-height);
       transform: translateY(-50%);
-      border-top: 1px solid #383838;
-      border-bottom: 1px solid #383838;
-      border-radius: 12px;
-      z-index: 1;
+      border-top: 1px solid #3a3a3a;
+      border-bottom: 1px solid #3a3a3a;
+      border-radius: 14px;
+      z-index: 4;
+      pointer-events: none;
+      background: rgba(255,255,255,0.02);
+      box-shadow: inset 0 0 18px rgba(255,255,255,0.02);
+    }
+
+    .picker-wheel {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+    }
+
+    .picker-item {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: var(--row-height);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      will-change: transform, opacity, filter;
+      transition: transform 0.08s linear, opacity 0.08s linear, filter 0.08s linear;
       pointer-events: none;
     }
 
-    .picker-values {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      z-index: 0;
-      padding: 12px 0;
-    }
-
-    .picker-value {
+    .picker-value-text {
+      display: inline-block;
+      min-width: 120px;
       text-align: center;
-      transition: transform 0.12s ease, opacity 0.12s ease;
-      line-height: 1;
+      font-weight: 700;
+      transform-origin: center center;
+      transition: transform 0.08s linear, opacity 0.08s linear, color 0.08s linear;
     }
 
-    .picker-value.top,
-    .picker-value.bottom {
-      font-size: 22px;
-      color: #8f8f8f;
-      opacity: 0.75;
-      transform: scale(0.9);
-    }
-
-    .picker-value.middle {
-      font-size: 40px;
-      font-weight: 800;
-      color: #fff;
-      transform: scale(1);
-    }
-
-    .picker-unit {
+    .picker-value-text small {
       display: block;
       font-size: 12px;
+      font-weight: 400;
+      margin-top: 5px;
       color: var(--muted);
-      margin-top: 6px;
       letter-spacing: 0.3px;
     }
 
@@ -214,78 +266,6 @@
       border: 1px solid #4a1d1d;
     }
 
-    .gauge-wrap {
-      display: flex;
-      justify-content: center;
-      margin-top: 10px;
-      margin-bottom: 8px;
-    }
-
-    svg {
-      width: 100%;
-      max-width: 420px;
-      height: auto;
-      display: block;
-    }
-
-    .center-readout {
-      text-align: center;
-      margin-top: -6px;
-    }
-
-    .current {
-      font-size: 36px;
-      font-weight: 800;
-      line-height: 1;
-    }
-
-    .target {
-      margin-top: 6px;
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    .status {
-      text-align: center;
-      font-size: 15px;
-      font-weight: 700;
-      margin-top: 14px;
-    }
-
-    .status.green {
-      color: var(--green);
-    }
-
-    .status.red {
-      color: var(--red);
-    }
-
-    .top-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .stat {
-      background: var(--panel-2);
-      border: 1px solid #2a2a2a;
-      border-radius: 16px;
-      text-align: center;
-      padding: 12px 10px;
-    }
-
-    .stat-label {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    .stat-value {
-      font-size: 20px;
-      font-weight: 800;
-    }
-
     .actions-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -311,12 +291,7 @@
       }
 
       .picker {
-        width: 100%;
-        max-width: 220px;
-      }
-
-      .top-stats {
-        grid-template-columns: 1fr;
+        max-width: 100%;
       }
 
       .actions-grid {
@@ -339,18 +314,7 @@
       <div class="picker-wrap">
         <div class="picker" id="goalPicker">
           <div class="picker-center-line"></div>
-          <div class="picker-values">
-            <div class="picker-value top">
-              <span id="goalPrev">1690</span>
-            </div>
-            <div class="picker-value middle">
-              <span id="goalCurrent">1700</span>
-              <span class="picker-unit">kcal</span>
-            </div>
-            <div class="picker-value bottom">
-              <span id="goalNext">1710</span>
-            </div>
-          </div>
+          <div class="picker-wheel" id="goalWheel"></div>
         </div>
       </div>
 
@@ -366,7 +330,6 @@
         <svg viewBox="0 0 420 250" aria-label="Jauge de calories">
           <path
             id="trackArc"
-            d=""
             fill="none"
             stroke="#3a3a3a"
             stroke-width="28"
@@ -375,7 +338,6 @@
 
           <path
             id="progressArc"
-            d=""
             fill="none"
             stroke="#22c55e"
             stroke-width="28"
@@ -387,45 +349,19 @@
 
       <div class="center-readout">
         <div class="current"><span id="consumedValue">0</span> kcal</div>
-        <div class="target">Objectif : <span id="targetValue">1700</span> kcal</div>
+        <div class="target">
+          Objectif : <span id="targetValue">1700</span> kcal
+        </div>
       </div>
 
       <div id="statusText" class="status green">Tu es à 0 % de ton objectif.</div>
 
-      <div class="top-stats">
-        <div class="stat">
-          <div class="stat-label">Restant</div>
-          <div class="stat-value"><span id="remainingValue">1700</span></div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Ajout actuel</div>
-          <div class="stat-value"><span id="addInlineValue">350</span></div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Progression</div>
-          <div class="stat-value"><span id="progressPercent">0</span>%</div>
-        </div>
-      </div>
-    </div>
-
-    <div id="controlsCard" class="card hidden">
       <div class="section-title">Ajouter des calories</div>
 
       <div class="picker-wrap">
         <div class="picker" id="addPicker">
           <div class="picker-center-line"></div>
-          <div class="picker-values">
-            <div class="picker-value top">
-              <span id="addPrev">340</span>
-            </div>
-            <div class="picker-value middle">
-              <span id="addCurrent">350</span>
-              <span class="picker-unit">kcal à ajouter</span>
-            </div>
-            <div class="picker-value bottom">
-              <span id="addNext">360</span>
-            </div>
-          </div>
+          <div class="picker-wheel" id="addWheel"></div>
         </div>
       </div>
 
@@ -445,7 +381,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "calorie-counter-v2";
+    const STORAGE_KEY = "calorie-counter-v3";
 
     const state = {
       goal: 1700,
@@ -460,24 +396,17 @@
     const els = {
       setupCard: document.getElementById("setupCard"),
       trackerCard: document.getElementById("trackerCard"),
-      controlsCard: document.getElementById("controlsCard"),
 
-      goalPrev: document.getElementById("goalPrev"),
-      goalCurrent: document.getElementById("goalCurrent"),
-      goalNext: document.getElementById("goalNext"),
       goalPicker: document.getElementById("goalPicker"),
+      goalWheel: document.getElementById("goalWheel"),
       validateGoalBtn: document.getElementById("validateGoalBtn"),
 
-      addPrev: document.getElementById("addPrev"),
-      addCurrent: document.getElementById("addCurrent"),
-      addNext: document.getElementById("addNext"),
       addPicker: document.getElementById("addPicker"),
+      addWheel: document.getElementById("addWheel"),
       addCaloriesBtn: document.getElementById("addCaloriesBtn"),
 
       consumedValue: document.getElementById("consumedValue"),
       targetValue: document.getElementById("targetValue"),
-      remainingValue: document.getElementById("remainingValue"),
-      addInlineValue: document.getElementById("addInlineValue"),
       progressPercent: document.getElementById("progressPercent"),
       statusText: document.getElementById("statusText"),
 
@@ -531,18 +460,8 @@
       }
     }
 
-    function polarToCartesian(cx, cy, r, angleDeg) {
-      const angleRad = (angleDeg * Math.PI) / 180;
-      return {
-        x: cx + r * Math.cos(angleRad),
-        y: cy + r * Math.sin(angleRad)
-      };
-    }
-
     function describeTopArcLeftToRight(cx, cy, r) {
-      const start = polarToCartesian(cx, cy, r, Math.PI ? 180 : 180);
-      const end = polarToCartesian(cx, cy, r, 0);
-      return `M ${start.x} ${start.y} A ${r} ${r} 0 0 1 ${end.x} ${end.y}`;
+      return `M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`;
     }
 
     function updateGauge() {
@@ -563,25 +482,12 @@
       els.progressArc.setAttribute("stroke", ratio > 1 ? "#ef4444" : "#22c55e");
     }
 
-    function updatePickerDisplay(current, prevEl, currentEl, nextEl, max) {
-      const prev = clamp(current - state.step, state.minValue, max);
-      const next = clamp(current + state.step, state.minValue, max);
-
-      prevEl.textContent = prev;
-      currentEl.textContent = current;
-      nextEl.textContent = next;
-    }
-
     function updateTexts() {
       const ratio = state.goal > 0 ? state.consumed / state.goal : 0;
       const percent = Math.round(ratio * 100);
-      const remaining = state.goal - state.consumed;
 
       els.consumedValue.textContent = state.consumed;
       els.targetValue.textContent = state.goal;
-      els.remainingValue.textContent = remaining >= 0 ? remaining : `+${Math.abs(remaining)}`;
-      els.addInlineValue.textContent = state.addAmount;
-      els.progressPercent.textContent = percent;
 
       els.statusText.classList.remove("green", "red");
 
@@ -592,63 +498,120 @@
         els.statusText.classList.add("red");
         els.statusText.textContent = `Objectif dépassé de ${state.consumed - state.goal} kcal.`;
       }
-
-      updatePickerDisplay(
-        state.goal,
-        els.goalPrev,
-        els.goalCurrent,
-        els.goalNext,
-        state.maxGoal
-      );
-
-      updatePickerDisplay(
-        state.addAmount,
-        els.addPrev,
-        els.addCurrent,
-        els.addNext,
-        state.maxAdd
-      );
     }
 
     function render() {
       updateTexts();
       updateGauge();
+      goalPicker.render();
+      addPicker.render();
       saveState();
     }
 
     function showTracker() {
       els.setupCard.classList.add("hidden");
       els.trackerCard.classList.remove("hidden");
-      els.controlsCard.classList.remove("hidden");
     }
 
     function showSetup() {
       els.setupCard.classList.remove("hidden");
       els.trackerCard.classList.add("hidden");
-      els.controlsCard.classList.add("hidden");
       render();
     }
 
-    function setupWheelPicker(element, getValue, setValue, maxValue) {
-      let startY = 0;
-      let lastY = 0;
+    function createCarouselPicker(options) {
+      const {
+        element,
+        wheelElement,
+        getValue,
+        setValue,
+        maxValue,
+        unitLabel
+      } = options;
+
+      const rowHeight = 44;
+      const centerY = 110;
+      const threshold = 22;
+      const visibleRange = 4;
+
+      let dragStartY = 0;
+      let dragCurrentOffset = 0;
       let dragging = false;
-      let accumulatedDelta = 0;
-      const threshold = 24;
+      let animationFrame = null;
 
-      function applyDelta(deltaY) {
-        accumulatedDelta += deltaY;
-
-        while (Math.abs(accumulatedDelta) >= threshold) {
-          if (accumulatedDelta > 0) {
-            setValue(clamp(getValue() - state.step, state.minValue, maxValue));
-            accumulatedDelta -= threshold;
-          } else {
-            setValue(clamp(getValue() + state.step, state.minValue, maxValue));
-            accumulatedDelta += threshold;
-          }
-          render();
+      function commitStep(delta) {
+        if (delta >= threshold) {
+          const steps = Math.floor(delta / threshold);
+          setValue(clamp(getValue() - steps * state.step, state.minValue, maxValue));
+          dragCurrentOffset -= steps * threshold;
+        } else if (delta <= -threshold) {
+          const steps = Math.floor(Math.abs(delta) / threshold);
+          setValue(clamp(getValue() + steps * state.step, state.minValue, maxValue));
+          dragCurrentOffset += steps * threshold;
         }
+      }
+
+      function scheduleRender() {
+        if (animationFrame) return;
+        animationFrame = requestAnimationFrame(() => {
+          animationFrame = null;
+          renderWheel();
+        });
+      }
+
+      function renderWheel() {
+        wheelElement.innerHTML = "";
+
+        for (let i = -visibleRange; i <= visibleRange; i++) {
+          const item = document.createElement("div");
+          item.className = "picker-item";
+
+          const value = clamp(getValue() + i * state.step, state.minValue, maxValue);
+          const y = centerY + (i * rowHeight) + dragCurrentOffset;
+
+          const distance = Math.abs(y - centerY);
+          const normalized = Math.min(distance / (rowHeight * 3.2), 1);
+
+          const scale = 1.22 - (normalized * 0.42);
+          const opacity = 1 - (normalized * 0.78);
+          const blur = normalized * 1.5;
+
+          item.style.top = `${y - rowHeight / 2}px`;
+          item.style.opacity = opacity.toFixed(3);
+          item.style.filter = `blur(${blur.toFixed(2)}px)`;
+
+          const text = document.createElement("div");
+          text.className = "picker-value-text";
+          text.style.transform = `scale(${Math.max(scale, 0.72).toFixed(3)})`;
+          text.style.color = normalized < 0.18 ? "#ffffff" : "#a1a1aa";
+          text.textContent = value;
+
+          if (normalized < 0.18) {
+            const small = document.createElement("small");
+            small.textContent = unitLabel;
+            text.appendChild(small);
+          }
+
+          item.appendChild(text);
+          wheelElement.appendChild(item);
+        }
+      }
+
+      function animateOffsetBack() {
+        function step() {
+          dragCurrentOffset *= 0.72;
+
+          if (Math.abs(dragCurrentOffset) < 0.35) {
+            dragCurrentOffset = 0;
+            renderWheel();
+            return;
+          }
+
+          renderWheel();
+          requestAnimationFrame(step);
+        }
+
+        requestAnimationFrame(step);
       }
 
       element.addEventListener("wheel", (event) => {
@@ -663,44 +626,71 @@
 
       element.addEventListener("touchstart", (event) => {
         dragging = true;
-        startY = event.touches[0].clientY;
-        lastY = startY;
-        accumulatedDelta = 0;
+        dragStartY = event.touches[0].clientY;
       }, { passive: true });
 
       element.addEventListener("touchmove", (event) => {
         if (!dragging) return;
+
         const currentY = event.touches[0].clientY;
-        const delta = currentY - lastY;
-        lastY = currentY;
-        applyDelta(delta);
-      }, { passive: false });
+        const delta = currentY - dragStartY;
+        dragStartY = currentY;
+
+        dragCurrentOffset += delta;
+        commitStep(dragCurrentOffset);
+        scheduleRender();
+      }, { passive: true });
 
       element.addEventListener("touchend", () => {
         dragging = false;
-        accumulatedDelta = 0;
+        animateOffsetBack();
       });
 
       element.addEventListener("mousedown", (event) => {
         dragging = true;
-        startY = event.clientY;
-        lastY = startY;
-        accumulatedDelta = 0;
+        dragStartY = event.clientY;
       });
 
       window.addEventListener("mousemove", (event) => {
         if (!dragging) return;
+
         const currentY = event.clientY;
-        const delta = currentY - lastY;
-        lastY = currentY;
-        applyDelta(delta);
+        const delta = currentY - dragStartY;
+        dragStartY = currentY;
+
+        dragCurrentOffset += delta;
+        commitStep(dragCurrentOffset);
+        scheduleRender();
       });
 
       window.addEventListener("mouseup", () => {
+        if (!dragging) return;
         dragging = false;
-        accumulatedDelta = 0;
+        animateOffsetBack();
       });
+
+      return {
+        render: renderWheel
+      };
     }
+
+    const goalPicker = createCarouselPicker({
+      element: els.goalPicker,
+      wheelElement: els.goalWheel,
+      getValue: () => state.goal,
+      setValue: (value) => { state.goal = value; },
+      maxValue: state.maxGoal,
+      unitLabel: "kcal"
+    });
+
+    const addPicker = createCarouselPicker({
+      element: els.addPicker,
+      wheelElement: els.addWheel,
+      getValue: () => state.addAmount,
+      setValue: (value) => { state.addAmount = value; },
+      maxValue: state.maxAdd,
+      unitLabel: "kcal à ajouter"
+    });
 
     els.validateGoalBtn.addEventListener("click", () => {
       showTracker();
@@ -722,20 +712,6 @@
       state.consumed = 0;
       render();
     });
-
-    setupWheelPicker(
-      els.goalPicker,
-      () => state.goal,
-      (value) => { state.goal = value; },
-      state.maxGoal
-    );
-
-    setupWheelPicker(
-      els.addPicker,
-      () => state.addAmount,
-      (value) => { state.addAmount = value; },
-      state.maxAdd
-    );
 
     loadState();
     showTracker();
