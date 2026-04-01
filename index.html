@@ -24,9 +24,11 @@
       --blue: #3b82f6;
       --shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
       --radius: 24px;
-      --picker-height: 200px;
+      --picker-height: 285px;
       --row-height: 42px;
       --center-height: 60px;
+      --add-panel-size: 250px;
+      --add-picker-height: 165px;
     }
 
     * {
@@ -180,19 +182,22 @@
     }
 
     .add-panel {
-      width: 100%;
-      max-width: 210px;
+      width: var(--add-panel-size);
+      height: var(--add-panel-size);
       border-radius: 18px;
       background: linear-gradient(180deg, #181818, #111111);
       border: 1px solid #2b2b2b;
-      padding: 0 0 10px;
+      padding: 8px;
       box-shadow: inset 0 0 24px rgba(255,255,255,0.02);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .picker {
       width: 100%;
       height: var(--picker-height);
-      border-radius: 18px 18px 0 0;
+      border-radius: 22px 22px 0 0;
       background: linear-gradient(180deg, #181818, #111111);
       border: 0;
       position: relative;
@@ -201,15 +206,25 @@
       box-shadow: inset 0 0 24px rgba(255,255,255,0.02);
     }
 
+    #addPicker {
+      height: var(--add-picker-height);
+      border-radius: 14px;
+    }
+
     .picker::before,
     .picker::after {
       content: "";
       position: absolute;
       left: 0;
       width: 100%;
-      height: 58px;
+      height: 86px;
       z-index: 5;
       pointer-events: none;
+    }
+
+    #addPicker::before,
+    #addPicker::after {
+      height: 54px;
     }
 
     .picker::before {
@@ -281,7 +296,8 @@
       width: 100%;
       display: flex;
       justify-content: center;
-      padding: 8px 10px 0;
+      padding: 0;
+      margin-top: 2px;
     }
 
     #addCaloriesBtn {
@@ -366,20 +382,17 @@
     }
 
     @media (max-width: 380px) {
+      :root {
+        --add-panel-size: 230px;
+        --add-picker-height: 150px;
+      }
+
       .current {
         font-size: 38px;
       }
 
       .gauge-readout {
         margin-top: 104px;
-      }
-
-      .add-panel {
-        max-width: 195px;
-      }
-
-      .picker {
-        height: 190px;
       }
 
       .actions-grid {
@@ -475,7 +488,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "calorie-counter-v7";
+    const STORAGE_KEY = "calorie-counter-v8";
 
     const state = {
       goal: 1700,
@@ -622,7 +635,7 @@
       } = options;
 
       const rowHeight = 42;
-      const centerY = element.id === "addPicker" ? 100 : 142;
+      const centerY = element.id === "addPicker" ? 82 : 142;
       const visibleRange = 6;
 
       let dragY = 0;
