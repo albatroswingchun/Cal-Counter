@@ -24,7 +24,7 @@
       --blue: #3b82f6;
       --shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
       --radius: 24px;
-      --picker-height: 285px;
+      --picker-height: 200px;
       --row-height: 42px;
       --center-height: 60px;
     }
@@ -143,7 +143,7 @@
     }
 
     .target {
-      margin-top: 8px;
+      margin-top: 20px;
       font-size: 15px;
       color: var(--muted);
       line-height: 1.35;
@@ -153,7 +153,7 @@
       text-align: center;
       font-size: 15px;
       font-weight: 700;
-      margin-top: 8px;
+      margin-top: 18px;
       margin-bottom: 12px;
       min-height: 20px;
       transition: color 0.25s ease, opacity 0.25s ease;
@@ -181,18 +181,18 @@
 
     .add-panel {
       width: 100%;
-      max-width: 260px;
-      border-radius: 22px;
+      max-width: 210px;
+      border-radius: 18px;
       background: linear-gradient(180deg, #181818, #111111);
       border: 1px solid #2b2b2b;
-      padding: 0 0 12px;
+      padding: 0 0 10px;
       box-shadow: inset 0 0 24px rgba(255,255,255,0.02);
     }
 
     .picker {
       width: 100%;
       height: var(--picker-height);
-      border-radius: 22px 22px 0 0;
+      border-radius: 18px 18px 0 0;
       background: linear-gradient(180deg, #181818, #111111);
       border: 0;
       position: relative;
@@ -207,7 +207,7 @@
       position: absolute;
       left: 0;
       width: 100%;
-      height: 86px;
+      height: 58px;
       z-index: 5;
       pointer-events: none;
     }
@@ -281,13 +281,13 @@
       width: 100%;
       display: flex;
       justify-content: center;
-      padding: 10px 12px 0;
+      padding: 8px 10px 0;
     }
 
     #addCaloriesBtn {
       width: 100%;
-      min-height: 52px;
-      border-radius: 14px;
+      min-height: 46px;
+      border-radius: 12px;
       background: linear-gradient(180deg, #34d16f, var(--green));
       color: white;
       box-shadow: 0 8px 20px rgba(34,197,94,0.28);
@@ -374,8 +374,12 @@
         margin-top: 104px;
       }
 
+      .add-panel {
+        max-width: 195px;
+      }
+
       .picker {
-        height: 270px;
+        height: 190px;
       }
 
       .actions-grid {
@@ -395,7 +399,7 @@
       <div class="section-title">Objectif du jour</div>
 
       <div class="picker-block" style="width:100%; max-width:260px; margin:0 auto 12px;">
-        <div class="picker" id="goalPicker" style="border-radius:22px;">
+        <div class="picker" id="goalPicker" style="border-radius:22px; height:285px;">
           <div class="picker-center-line"></div>
           <div class="picker-wheel" id="goalWheel"></div>
         </div>
@@ -618,7 +622,7 @@
       } = options;
 
       const rowHeight = 42;
-      const centerY = 142;
+      const centerY = element.id === "addPicker" ? 100 : 142;
       const visibleRange = 6;
 
       let dragY = 0;
@@ -824,15 +828,15 @@
     showTracker();
     render();
   </script>
-<script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", async () => {
-      const regs = await navigator.serviceWorker.getRegistrations();
-      for (const reg of regs) {
-        await reg.unregister();
-      }
-    });
-  }
-</script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", async () => {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        for (const reg of regs) {
+          await reg.unregister();
+        }
+      });
+    }
+  </script>
 </body>
 </html>
