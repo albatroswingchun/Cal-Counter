@@ -99,8 +99,8 @@
       position: relative;
       display: flex;
       justify-content: center;
-      margin-top: 2px;
-      margin-bottom: 6px;
+      margin-top: 22px;
+      margin-bottom: 22px;
       animation: softRise 0.35s ease;
     }
 
@@ -156,7 +156,7 @@
       font-size: 15px;
       font-weight: 700;
       margin-top: 18px;
-      margin-bottom: 12px;
+      margin-bottom: 30px;
       min-height: 20px;
       transition: color 0.25s ease, opacity 0.25s ease;
     }
@@ -172,7 +172,7 @@
     .picker-row {
       display: flex;
       justify-content: center;
-      margin-top: 6px;
+      margin-top: 28px;
     }
 
     .picker-block {
@@ -391,8 +391,21 @@
         font-size: 38px;
       }
 
+      .gauge-wrap {
+        margin-top: 18px;
+        margin-bottom: 18px;
+      }
+
       .gauge-readout {
         margin-top: 104px;
+      }
+
+      .status {
+        margin-bottom: 24px;
+      }
+
+      .picker-row {
+        margin-top: 24px;
       }
 
       .actions-grid {
@@ -841,15 +854,15 @@
     showTracker();
     render();
   </script>
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", async () => {
-        const regs = await navigator.serviceWorker.getRegistrations();
-        for (const reg of regs) {
-          await reg.unregister();
-        }
-      });
-    }
-  </script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async () => {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for (const reg of regs) {
+        await reg.unregister();
+      }
+    });
+  }
+</script>
 </body>
 </html>
