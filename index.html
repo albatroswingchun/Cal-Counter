@@ -350,15 +350,29 @@
       border: 1px solid #4a1d1d;
     }
 
+    #trackerCard {
+      min-height: calc(100vh - 30px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tracker-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
     .actions-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-top: 12px;
+      margin-top: auto;
+      padding-top: 30px;
     }
 
     .footer-note {
-      margin-top: 10px;
+      margin-top: 18px;
+      margin-bottom: max(2px, env(safe-area-inset-bottom));
       text-align: center;
       font-size: 12px;
       color: var(--muted);
@@ -410,6 +424,7 @@
 
       .actions-grid {
         grid-template-columns: 1fr;
+        padding-top: 26px;
       }
     }
   </style>
@@ -436,66 +451,68 @@
     </div>
 
     <div id="trackerCard" class="card hidden">
-      <h1>Compteur de calories</h1>
+      <div class="tracker-main">
+        <h1>Compteur de calories</h1>
 
-      <div class="gauge-wrap">
-        <svg viewBox="0 0 420 250" aria-label="Jauge de calories">
-          <path
-            id="trackArc"
-            fill="none"
-            stroke="#3a3a3a"
-            stroke-width="28"
-            stroke-linecap="round"
-          ></path>
+        <div class="gauge-wrap">
+          <svg viewBox="0 0 420 250" aria-label="Jauge de calories">
+            <path
+              id="trackArc"
+              fill="none"
+              stroke="#3a3a3a"
+              stroke-width="28"
+              stroke-linecap="round"
+            ></path>
 
-          <path
-            id="progressArc"
-            fill="none"
-            stroke="#22c55e"
-            stroke-width="28"
-            stroke-linecap="round"
-            stroke-dasharray="0 9999"
-          ></path>
-        </svg>
+            <path
+              id="progressArc"
+              fill="none"
+              stroke="#22c55e"
+              stroke-width="28"
+              stroke-linecap="round"
+              stroke-dasharray="0 9999"
+            ></path>
+          </svg>
 
-        <div class="gauge-overlay">
-          <div class="gauge-readout">
-            <div class="current">
-              <span id="consumedValue">0</span>
-              <span class="current-unit">kcal</span>
-            </div>
-            <div class="target">
-              Objectif : <span id="targetValue">1700</span> kcal
+          <div class="gauge-overlay">
+            <div class="gauge-readout">
+              <div class="current">
+                <span id="consumedValue">0</span>
+                <span class="current-unit">kcal</span>
+              </div>
+              <div class="target">
+                Objectif : <span id="targetValue">1700</span> kcal
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div id="statusText" class="status green">Tu es à 0 % de ton objectif.</div>
+        <div id="statusText" class="status green">Tu es à 0 % de ton objectif.</div>
 
-      <div class="picker-row">
-        <div class="add-panel">
-          <div class="picker-block" style="max-width:none;">
-            <div class="picker" id="addPicker">
-              <div class="picker-center-line"></div>
-              <div class="picker-wheel" id="addWheel"></div>
+        <div class="picker-row">
+          <div class="add-panel">
+            <div class="picker-block" style="max-width:none;">
+              <div class="picker" id="addPicker">
+                <div class="picker-center-line"></div>
+                <div class="picker-wheel" id="addWheel"></div>
+              </div>
+              <div class="picker-label">kcal à ajouter</div>
             </div>
-            <div class="picker-label">kcal à ajouter</div>
-          </div>
 
-          <div class="side-action">
-            <button id="addCaloriesBtn">Ajouter</button>
+            <div class="side-action">
+              <button id="addCaloriesBtn">Ajouter</button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="actions-grid">
-        <button class="secondary" id="changeGoalBtn">Modifier l’objectif</button>
-        <button class="danger" id="resetDayBtn">Remise à zéro</button>
-      </div>
+        <div class="actions-grid">
+          <button class="secondary" id="changeGoalBtn">Modifier l’objectif</button>
+          <button class="danger" id="resetDayBtn">Remise à zéro</button>
+        </div>
 
-      <div class="footer-note">
-        L’objectif et le compteur sont enregistrés automatiquement sur l’appareil.
+        <div class="footer-note">
+          L’objectif et le compteur sont enregistrés automatiquement sur l’appareil.
+        </div>
       </div>
     </div>
   </div>
@@ -854,15 +871,15 @@
     showTracker();
     render();
   </script>
-<script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", async () => {
-      const regs = await navigator.serviceWorker.getRegistrations();
-      for (const reg of regs) {
-        await reg.unregister();
-      }
-    });
-  }
-</script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", async () => {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        for (const reg of regs) {
+          await reg.unregister();
+        }
+      });
+    }
+  </script>
 </body>
 </html>
